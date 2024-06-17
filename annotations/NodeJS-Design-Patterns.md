@@ -66,3 +66,20 @@ Dois principais conceitos:
 - `exports` e `module.exports` sao variaveis especiais que podem ser usadas para exportar funcionalidades publicas do modulo atual
 
 ## The require function is synchronous
+
+O problema do `require()` ser sincrono é que ao carregar algum modulo não é garantido que ele estará pronto para ser usado.
+
+## The resolving algorithm
+
+O termo `dependecy hell` descreve uma situação em que duas ou mais dependencias do programa requer uma dependencia compartilhada, porém em diferentes versões. Para isso o NodeJS possui gerenciadores de pacotes (`npm` ou `yarn`, por exemplo) que organiza as dependencias da aplicação e também ao algoritmo de `resolving` usado na função `require()`.
+
+## The module cache
+
+Cada moduo é apenas carregado e avaliado na primeira vez que ele é requerido, de forma que qualquer chamada subsequente do `require()` vai simplesmente retornar a versão em cache desse modulo. Caching é crucial para a performance, mas tambem possui algumas implicações importantes na funcionalidade:
+
+- Torna possível ter ciclos dentro da dependencia dos modulos
+- Isso garante, até certo ponto, que uma mesma instancia do modulo seja retornada quando requerida dentro de um mesmo pacote
+
+O chace do modulo é exposto via variável `require.cache`, sendo possivel obter acesso direto se necessario. Um caso de uso comum é invalidar qualquer modulo do cache deletando a key relativa a ele na variável `require.cache`, um exemplo prático para isso pode ser durante os testes, porém muito perigoso se aplicado em circunstancias normais.
+
+# Using ESM in Node.js
